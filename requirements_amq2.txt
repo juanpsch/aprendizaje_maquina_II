@@ -12,3 +12,5 @@ scikit-learn==1.2.0
 shap==0.41.0
 uvicorn==0.22.0
 optuna==2.10.0
+plotly
+nbformat>=4.2.0
