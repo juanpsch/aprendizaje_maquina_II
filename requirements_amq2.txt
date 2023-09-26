@@ -14,3 +14,5 @@ uvicorn==0.22.0
 optuna==2.10.0
 plotly
 nbformat>=4.2.0
+chardet
+pycaret
