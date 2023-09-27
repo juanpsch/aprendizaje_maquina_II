@@ -1,0 +1,20 @@
+2023-09-26 15:18:59,798:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 15:18:59,798:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 15:18:59,798:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 15:18:59,798:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 15:19:00,301:INFO:Initializing load_model()
+2023-09-26 15:19:00,301:INFO:load_model(model_name=diamond-pipeline, platform=None, authentication=None, verbose=True)
+2023-09-26 16:26:18,542:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 16:26:18,542:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 16:26:18,542:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 16:26:18,542:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2023-09-26 16:26:19,164:INFO:Initializing load_model()
+2023-09-26 16:26:19,164:INFO:load_model(model_name=diamond-pipeline, platform=None, authentication=None, verbose=True)
