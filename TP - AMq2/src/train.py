@@ -4,15 +4,28 @@ train.py
 COMPLETAR DOCSTRING
 
 DESCRIPCIÓN:
-AUTOR:
-FECHA:
+AUTOR: Juan Pablo Schamun
+FECHA: Septiembre 2023
 """
 
 # Imports
-import pandas as pd
-import argparse
 
-class ModelTrainingPipeline(object):
+import argparse
+import pickle
+import pandas as pd
+
+# Importando librerías para el modelo
+from sklearn.model_selection import train_test_split, cross_validate, cross_val_score
+from sklearn import metrics
+from sklearn.linear_model import LinearRegression
+
+
+class ModelTrainingPipeline():
+
+    '''
+    Clase del pipeline para entrenamiento
+    
+    '''
 
     def __init__(self, input_path, model_path):
         self.input_path = input_path
@@ -20,23 +33,23 @@ class ModelTrainingPipeline(object):
 
     def read_data(self) -> pd.DataFrame:
         """
-        COMPLETAR DOCSTRING 
-        
+        Lee el archivo en donde está la data para entrenamiento
+
         :return pandas_df: The desired DataLake table as a DataFrame
         :rtype: pd.DataFrame
         """
-            
+
         pandas_df = pd.read_csv(self.input_path)
-        
+
         return pandas_df
 
-    
+
     def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        COMPLETAR DOCSTRING
+        Trains the model from Data coming from Feature Engineering
         
         """
-        
+
         # Eliminación de variables que no contribuyen a la predicción por ser muy específicas
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier']).copy()
 
@@ -45,21 +58,16 @@ class ModelTrainingPipeline(object):
         df_test = dataset.loc[df['Set'] == 'test']
 
         # Eliminando columnas sin datos
-        df_train.drop(['Set'], axis=1, inplace=True)
-        df_test.drop(['Item_Outlet_Sales','Set'], axis=1, inplace=True)
-
-
-        # Importando librerías para el modelo
-        from sklearn.model_selection import train_test_split, cross_validate, cross_val_score
-        from sklearn import metrics
-        from sklearn.linear_model import LinearRegression
+        df_train = df_train.drop(['Set'], axis=1)
+        df_test = df_test.drop(['Item_Outlet_Sales','Set'], axis=1)
 
         seed = 28
         model = LinearRegression()
 
         # División de dataset de entrenaimento y validación
-        X = df_train.drop(columns='Item_Outlet_Sales') #[['Item_Weight', 'Item_MRP', 'Outlet_Establishment_Year', 'Outlet_Size', 'Outlet_Location_Type']] # .drop(columns='Item_Outlet_Sales')
-        x_train, x_val, y_train, y_val = train_test_split(X, df_train['Item_Outlet_Sales'], test_size = 0.3, random_state=seed)
+        X = df_train.drop(columns='Item_Outlet_Sales')
+        x_train, x_val, y_train, y_val = \
+            train_test_split(X, df_train['Item_Outlet_Sales'], test_size = 0.3, random_state=seed)
 
         # Entrenamiento del modelo
         model.fit(x_train,y_train)
@@ -85,9 +93,10 @@ class ModelTrainingPipeline(object):
         coef = pd.DataFrame(x_train.columns, columns=['features'])
         coef['Coeficiente Estimados'] = model.coef_
         print(coef, '\n')
-        coef.sort_values(by='Coeficiente Estimados').set_index('features').plot(kind='bar', title='Importancia de las variables', figsize=(12, 6))        
+        coef.sort_values(by='Coeficiente Estimados').set_index('features')\
+            .plot(kind='bar', title='Importancia de las variables', figsize=(12, 6))       
 
-        
+
         return model
 
     def model_dump(self, model_trained) -> None:
@@ -95,14 +104,17 @@ class ModelTrainingPipeline(object):
         Saves de model in a pickle file
         
         """
-        import pickle
-
+ 
         pickle.dump(model_trained, open(self.model_path, 'wb'))
-        
+
         return None
 
     def run(self):
-    
+
+        '''
+        Run methods of the class secuencially
+        '''
+
         df = self.read_data()
         model_trained = self.model_training(df)
         self.model_dump(model_trained)
@@ -112,7 +124,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("input", type=str, help='input file from Feature Engineering')
     parser.add_argument("output", type=str, help='output pickle file of the model')
-    args = parser.parse_args()
 
+    args = parser.parse_args()
 
     ModelTrainingPipeline(input_path = args.input, model_path = args.output).run()

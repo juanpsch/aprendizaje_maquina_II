@@ -3,56 +3,83 @@ predict.py
 
 COMPLETAR DOCSTRING
 
-DESCRIPCIÓN:
-AUTOR:
-FECHA:
+DESCRIPCIÓN: Class for Making Predictions
+AUTOR: Juan Pablo Schamun
+FECHA: Septiembre 2023
 """
 
 # Imports
 
-class MakePredictionPipeline(object):
-    
+import argparse
+import pickle
+import pandas as pd
+
+class MakePredictionPipeline():
+
+    '''
+    Class for Making Predictions
+    '''
+
     def __init__(self, input_path, output_path, model_path: str = None):
         self.input_path = input_path
         self.output_path = output_path
         self.model_path = model_path
-                
-                
+
+
     def load_data(self) -> pd.DataFrame:
         """
-        COMPLETAR DOCSTRING
+        Loads data for prediction (Raw)
         """
+        data = pd.read_csv(self.input_path)
 
         return data
 
     def load_model(self) -> None:
         """
-        COMPLETAR DOCSTRING
+        Loads model already trained
         """    
-        self.model = load_model(self.model_path) # Esta función es genérica, utilizar la función correcta de la biblioteca correspondiente
-        
+        self.model = pickle.load(open(self.model_path, "rb"))
+
         return None
 
 
-    def make_predictions(self, data: DataFrame) -> pd.DataFrame:
+    def make_predictions(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        COMPLETAR DOCSTRING
+        Predicts output from loaded data
         """
-   
-        new_data = self.model.predict(data)
 
-        return new_data
+        # Eliminación de variables que no contribuyen a la predicción por ser muy específicas
+        dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier']).copy()
+
+        # División del dataset de train y test
+        df_train = dataset.loc[df['Set'] == 'train']
+        df_test = dataset.loc[df['Set'] == 'test']
+
+        # Eliminando columnas sin datos
+        df_train = df_train.drop(['Set'], axis=1)
+        df_test = df_test.drop(['Item_Outlet_Sales','Set'], axis=1)
+
+        # Predecir   
+        df_test['pred_Sales'] = self.model.predict(df_test)
+
+        return df_test
 
 
-    def write_predictions(self, predicted_data: DataFrame) -> None:
+    def write_predictions(self, predicted_data: pd.DataFrame) -> None:
         """
-        COMPLETAR DOCSTRING
+        writes output to file
         """
+
+        predicted_data.to_csv(self.output_path)
 
         return None
 
 
     def run(self):
+
+        '''
+        Run methods of the class secuencially
+        '''
 
         data = self.load_data()
         self.load_model()
@@ -61,10 +88,18 @@ class MakePredictionPipeline(object):
 
 
 if __name__ == "__main__":
-    
-    spark = Spark()
-    
-    pipeline = MakePredictionPipeline(input_path = 'Ruta/De/Donde/Voy/A/Leer/Mis/Datos',
-                                      output_path = 'Ruta/Donde/Voy/A/Escribir/Mis/Datos',
-                                      model_path = 'Ruta/De/Donde/Voy/A/Leer/Mi/Modelo')
-    pipeline.run()  
+
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", type=str, help='input file with data for predictions')
+    parser.add_argument("output", type=str, help='output file of predicted data')
+    parser.add_argument("model", type=str, help='input pickle file of the model')
+
+    args = parser.parse_args()
+
+    # spark = Spark()
+
+    pipeline = MakePredictionPipeline(input_path = args.input,
+                                      output_path = args.output,
+                                      model_path = args.model)
+    pipeline.run()
