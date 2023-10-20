@@ -1,11 +1,9 @@
 """
 predict.py
 
-COMPLETAR DOCSTRING
-
 DESCRIPCIÓN: Class for Making Predictions
 AUTOR: Juan Pablo Schamun
-FECHA: Septiembre 2023
+FECHA: September 2023
 """
 
 # Imports

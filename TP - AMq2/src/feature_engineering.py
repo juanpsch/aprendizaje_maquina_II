@@ -5,7 +5,7 @@ COMPLETAR DOCSTRING
 
 DESCRIPCIÓN: Module for Feature Engineering
 AUTOR: Juan Pablo Schamun
-FECHA: Septiembre 2023
+FECHA: September 2023
 """
 
 # Imports
@@ -25,9 +25,7 @@ class FeatureEngineeringPipeline():
 
     def read_data(self) -> pd.DataFrame:
 
-        """
-        COMPLETAR DOCSTRING 
-        
+        """        
         :return pandas_df: The desired DataLake table as a DataFrame
         :rtype: pd.DataFrame
         """

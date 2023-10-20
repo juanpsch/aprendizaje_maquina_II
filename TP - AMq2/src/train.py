@@ -1,11 +1,9 @@
 """
 train.py
 
-COMPLETAR DOCSTRING
-
 DESCRIPCIÓN:
 AUTOR: Juan Pablo Schamun
-FECHA: Septiembre 2023
+FECHA: September 2023
 """
 
 # Imports
@@ -23,7 +21,7 @@ from sklearn.linear_model import LinearRegression
 class ModelTrainingPipeline():
 
     '''
-    Clase del pipeline para entrenamiento
+    Class for training pipeline
     
     '''
 
@@ -33,7 +31,7 @@ class ModelTrainingPipeline():
 
     def read_data(self) -> pd.DataFrame:
         """
-        Lee el archivo en donde está la data para entrenamiento
+        Reads file with training data
 
         :return pandas_df: The desired DataLake table as a DataFrame
         :rtype: pd.DataFrame
@@ -44,7 +42,7 @@ class ModelTrainingPipeline():
         return pandas_df
 
 
-    def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
+    def model_training(self, df: pd.DataFrame):
         """
         Trains the model from Data coming from Feature Engineering
         
@@ -78,23 +76,23 @@ class ModelTrainingPipeline():
         # Cálculo de los errores cuadráticos medios y Coeficiente de Determinación (R^2)
         mse_train = metrics.mean_squared_error(y_train, model.predict(x_train))
         R2_train = model.score(x_train, y_train)
-        print('Métricas del Modelo:')
-        print('ENTRENAMIENTO: RMSE: {:.2f} - R2: {:.4f}'.format(mse_train**0.5, R2_train))
+        # print('Métricas del Modelo:')
+        # print('ENTRENAMIENTO: RMSE: {:.2f} - R2: {:.4f}'.format(mse_train**0.5, R2_train))
 
         mse_val = metrics.mean_squared_error(y_val, pred)
         R2_val = model.score(x_val, y_val)
-        print('VALIDACIÓN: RMSE: {:.2f} - R2: {:.4f}'.format(mse_val**0.5, R2_val))
+        # print('VALIDACIÓN: RMSE: {:.2f} - R2: {:.4f}'.format(mse_val**0.5, R2_val))
 
-        print('\nCoeficientes del Modelo:')
+        # print('\nCoeficientes del Modelo:')
         # Constante del modelo
-        print('Intersección: {:.2f}'.format(model.intercept_))
+        # print('Intersección: {:.2f}'.format(model.intercept_))
 
         # Coeficientes del modelo
         coef = pd.DataFrame(x_train.columns, columns=['features'])
         coef['Coeficiente Estimados'] = model.coef_
-        print(coef, '\n')
-        coef.sort_values(by='Coeficiente Estimados').set_index('features')\
-            .plot(kind='bar', title='Importancia de las variables', figsize=(12, 6))       
+        # print(coef, '\n')
+        # coef.sort_values(by='Coeficiente Estimados').set_index('features')\
+        #   .plot(kind='bar', title='Importancia de las variables', figsize=(12, 6))       
 
 
         return model
